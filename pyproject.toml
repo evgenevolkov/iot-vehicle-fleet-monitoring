@@ -1,0 +1,22 @@
+[tool.pylint."MESSAGES CONTROL"]
+ignore = [
+    "Dockerfile",
+    ".pytest_cache",
+    ".venv",
+    ".vscode",
+    "__pycache__",
+    "*.yml",
+    "*.yaml"]
+
+[tool.flake8]
+exclude = [
+  ".git",
+  "__pycache__",
+  ".pytest_cache",
+  ".venv",
+  ".vscode"
+]
+
+[tool.mypy]
+exclude = "^(.venv|.pytest_cache)/"
+ignore_missing_imports = true
