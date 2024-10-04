@@ -17,6 +17,93 @@ from app.utils.logger import get_logger
 logger = get_logger(__name__)
 
 
+class BasicNavigationManager(NavigationManager):
+    """Manages communication and track state related to navigation"""
+    def __init__(
+            self,
+            allowed_zone_manager: AllowedZoneManager,
+            destination_tracker: DestinationTracker,
+            heading_selector: HeadingDirectionManager,
+            location_service: LocationService,
+            movement_manager: MovementManager,
+            ):
+
+        self.allowed_zone_manager = allowed_zone_manager
+        self.destination_tracker = destination_tracker
+        self.heading_selector = heading_selector
+        self.location_service = location_service
+        self.movement_manager = movement_manager
+
+    @property
+    def current_direction(self):
+        return self.movement_manager.current_direction.value
+
+    @property
+    def current_location(self):
+        return self.location_service.current_location
+
+    @property
+    def current_speed(self):
+        return self.movement_manager.current_speed
+
+    @property
+    def destination(self):
+        return self.destination_tracker.destination
+
+    @destination.setter
+    def destination(self, location: schemas.Location):
+        self.destination_tracker.destination = location
+
+    @property
+    def destination_reached(self):
+        return self.destination_tracker.destination_reached
+
+    @property
+    def distance_to_destination(self):
+        return self.destination_tracker.distance_to_destination
+
+    @property
+    def distance_until_turn_allowed(self):
+        return self.movement_manager.distance_until_turn_allowed
+
+    @property
+    def out_of_zone(self):
+        return self.allowed_zone_manager.out_of_zone
+
+    def move_to_destination(self):
+        """Main script to try to get to destination"""
+        if self.destination_reached:
+            logger.warning("Got `move` command while already at destination")
+            self._update_statuses()
+            return
+
+        # try to turn if allowed
+        if self.movement_manager.can_turn:
+            logger.debug("Can turn: current speed: %s, distance to turn %s",
+                         self.current_speed, self.distance_until_turn_allowed)
+            self.heading_selector.update_heading_direction()
+            self.movement_manager.turn(self.heading_selector.heading_direction)
+        movement_shift = self.movement_manager.move()
+        self.update_location(movement_shift)
+        self._update_statuses()
+
+    def initialize_new_task(self, destination: schemas.Location):
+        self.destination = destination
+        self._update_statuses()
+
+    def get_turn_direction(self):
+        self.heading_selector.update_heading_direction()
+        return self.heading_selector.heading_direction
+
+    def update_location(self, shift: schemas.Shift):
+        self.location_service.update_location(shift)
+        self._update_statuses()
+
+    def _update_statuses(self):
+        self.destination_tracker.update_state()
+        self.allowed_zone_manager.update_state()
+
+
 class BasicDestinationTracker(DestinationTracker):
     def __init__(
             self,
