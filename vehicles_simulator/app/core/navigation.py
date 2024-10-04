@@ -110,3 +110,53 @@ class BasicDestinationTracker(DestinationTracker):
         logger.debug("Destination reached: %s", str(self.destination_reached))
 
 
+class BasicAllowedZoneManager(AllowedZoneManager):
+    def __init__(
+            self,
+            location_service: LocationService
+            ):
+
+        self.location_service: LocationService = location_service
+        self._out_of_zone: bool = False
+        self._zone_borders_breached: List[schemas.Direction] = []
+
+    @property
+    def out_of_zone(self):
+        return self._out_of_zone
+
+    @out_of_zone.setter
+    def out_of_zone(self, status: bool):
+        self._out_of_zone = status
+
+    @property
+    def zone_borders_breached(self):
+        return self._zone_borders_breached
+
+    @zone_borders_breached.setter
+    def zone_borders_breached(
+            self,
+            borders_breached: List[schemas.Direction]
+            ):
+        self._zone_borders_breached = borders_breached
+
+    def update_state(self):
+        self._reset_out_of_zone()
+
+        if self.location_service.current_location.x < 0:
+            self.zone_borders_breached.append(schemas.Direction.LEFT)
+        elif self.location_service.current_location.x > \
+                self.location_service.nav_map.x_size:
+            self.zone_borders_breached.append(schemas.Direction.RIGHT)
+
+        if self.location_service.current_location.y < 0:
+            self.zone_borders_breached.append(schemas.Direction.DOWN)
+        elif self.location_service.current_location.y > \
+                self.location_service.nav_map.y_size:
+            self.zone_borders_breached.append(schemas.Direction.UP)
+
+        if len(self.zone_borders_breached) > 0:
+            self.out_of_zone = True
+
+    def _reset_out_of_zone(self):
+        self.out_of_zone = False
+        self.zone_borders_breached = []
