@@ -1,3 +1,6 @@
+from app.core.interfaces import (
+    LocationService
+    )
 from app.utils import (
     schemas,
     )
@@ -42,3 +45,41 @@ class NavigationMap:
                              "as it is an immutable property of Map")
 
 
+class BasicLocationService(LocationService):
+
+    def __init__(
+            self,
+            nav_map: NavigationMap,
+            current_location: schemas.Location = schemas.Location(x=1, y=1),
+            ):
+        self.nav_map: NavigationMap = nav_map
+        self._current_location: schemas.Location = current_location
+
+    @property
+    def nav_map(self):
+        return self._nav_map
+
+    @nav_map.setter
+    def nav_map(self, nav_map: NavigationMap):
+        self._nav_map = nav_map
+
+    @property
+    def current_location(self):
+        return self._current_location
+
+    @current_location.setter
+    def current_location(self, location: schemas.Location):
+        self._current_location = location
+
+    def override_current_location(self, location: schemas.Location):
+        """Helper method to redefine location of a vehicle"""
+        self.current_location = location
+        logger.warning("Location overriden to %s", str(location))
+
+    def update_location(self, shift: schemas.Shift):
+        new_location = schemas.Location(
+            x=self.current_location.x + shift.x,
+            y=self.current_location.y + shift.y
+        )
+        self.current_location = new_location
+        logger.info("Vehicle moved to %s", self.current_location)
