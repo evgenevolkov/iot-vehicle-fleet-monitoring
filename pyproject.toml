@@ -8,6 +8,13 @@ ignore = [
     "*.yml",
     "*.yaml"]
 
+[tool.pylint]
+disable = [
+    "C0116",  # Disable warning for missing function docstrings
+    "C0115", # Missing class docstring 
+    "C0114", # Missing module docstring
+]
+
 [tool.flake8]
 exclude = [
   ".git",
@@ -20,3 +27,7 @@ exclude = [
 [tool.mypy]
 exclude = "^(.venv|.pytest_cache)/"
 ignore_missing_imports = true
+
+[tool.pytest]
+log_cli = true
+log_cli_level = "DEBUG"
