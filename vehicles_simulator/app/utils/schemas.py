@@ -2,7 +2,12 @@
 from enum import Enum
 from datetime import datetime
 from typing import Literal
-from pydantic import BaseModel, NonNegativeInt
+from pydantic import (
+    BaseModel,
+    NonNegativeInt,
+    NonNegativeFloat,
+    PositiveInt
+    )
 
 
 class Direction(Enum):
@@ -35,8 +40,8 @@ class TrackerStatus(Enum):
 
 
 class MapSize(BaseModel):
-    x_size: NonNegativeInt
-    y_size: NonNegativeInt
+    x_size: PositiveInt
+    y_size: PositiveInt
 
 
 class Location(BaseModel):
