@@ -38,8 +38,8 @@ class Vehicle:
         return self.navigation_manager.current_location
 
     def get_current_tracker_status(self):
-        return self.tracker_manager.get_current_status()
         """Method to get tracker status vehicle current location"""
+        return self.tracker_manager.get_current_tracker_status()
 
     def get_current_task_status(self):
         """Method to get task manager status"""

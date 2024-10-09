@@ -46,7 +46,7 @@ class TasksManager(ABC):
 
 class TrackerManager(ABC):
     @abstractmethod
-    def get_current_status(self) -> schemas.TrackerStatus:
+    def get_current_tracker_status(self) -> schemas.TrackerStatus:
         pass
 
     @abstractmethod
@@ -144,4 +144,15 @@ class MovementManager(ABC):
 
     @abstractmethod
     def move(self):
+        pass
+
+
+# --- Other ---
+
+
+class MessageSender(ABC):
+    """Implements connection with tracking data destination"""
+
+    @abstractmethod
+    def send_message(self, message):
         pass
