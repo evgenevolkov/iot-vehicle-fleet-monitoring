@@ -1,7 +1,13 @@
 """Pedantic data schemas used within the application"""
 from enum import Enum
+from datetime import datetime
 from typing import Literal
-from pydantic import BaseModel, NonNegativeInt
+from pydantic import (
+    BaseModel,
+    NonNegativeInt,
+    NonNegativeFloat,
+    PositiveInt
+    )
 
 
 class Direction(Enum):
@@ -34,8 +40,8 @@ class TrackerStatus(Enum):
 
 
 class MapSize(BaseModel):
-    x_size: NonNegativeInt
-    y_size: NonNegativeInt
+    x_size: PositiveInt
+    y_size: PositiveInt
 
 
 class Location(BaseModel):
@@ -47,7 +53,6 @@ class Vehicle(BaseModel):
     location: Location
     speed: NonNegativeInt
     tracker_status: Literal[TrackerStatus.ONLINE, TrackerStatus.OFFLINE]
-    engine_state: Literal[TrackerStatus.ONLINE, TrackerStatus.OFFLINE]
 
 
 class TrackingData(BaseModel):

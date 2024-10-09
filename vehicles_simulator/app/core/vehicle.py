@@ -48,8 +48,6 @@ class Vehicle:
     def run_execution_step(self):
         """Main vehicle execution logic"""
 
-        self.tracker_manager.update()
-
         # if task_state is idle, try to get a new task
         if self.tasks_manager.task_state == schemas.TaskState.IDLE:
             logger.debug("In %s mode. Trying to get new task",
@@ -82,3 +80,5 @@ class Vehicle:
         logger.debug(
             "Current distance: %s",
             self.navigation_manager.distance_to_destination)
+
+        self.tracker_manager.update()

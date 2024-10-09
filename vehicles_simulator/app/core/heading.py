@@ -28,6 +28,13 @@ logger = get_logger(__name__)
 
 
 class HeadingDirectionManager:
+    INITIAL_HEADING_PROBABILITIES = {
+        schemas.Direction.UP: 25,
+        schemas.Direction.DOWN: 25,
+        schemas.Direction.LEFT: 25,
+        schemas.Direction.RIGHT: 25
+    }
+
     def __init__(self):
         self.heading_providers: List[Dict[str, object]] = []
         self.heading_direction: schemas.Direction = schemas.Direction.UP
@@ -45,18 +52,13 @@ class HeadingDirectionManager:
             'weight': provider_weight
         })
 
-    def _get_heading_probabilities(self):
-        heading_probabilities = {
-            schemas.Direction.UP: 10,
-            schemas.Direction.DOWN: 10,
-            schemas.Direction.LEFT: 10,
-            schemas.Direction.RIGHT: 10
-        }
-
+    def _calculate_heading_probabilities(self) -> Dict[schemas.Direction,
+                                                       float]:
         """
         Iterate over providers, modify  heading directions and apply to
         base probabilities modified by provider's weight.
         """
+        heading_probabilities = self.INITIAL_HEADING_PROBABILITIES.copy()
         for provider in self.heading_providers:
             provider['entity'].update_heading_directions()
             provider_headings = provider['entity'].heading_directions
@@ -67,26 +69,26 @@ class HeadingDirectionManager:
                 in heading_probabilities.items()
             }
 
-        return heading_probabilities
+        total = sum(heading_probabilities.values())
+        return {k: v / total for k, v in heading_probabilities.items()}
 
-    def _generate_next_direction(self):
-        heading_probabilities = self._get_heading_probabilities()
-        logger.debug("heading probabilities: %s", str(heading_probabilities))
+    def _define_next_direction(self) -> schemas.Direction:
         """
         Define heading direction.
 
         To do it collect each direction probability and use weighted
-        random generator to make final decision. 
+        random generator to make final decision.
         """
+        heading_probabilities = self._calculate_heading_probabilities()
+        logger.debug("Heading probabilities: %s", str(heading_probabilities))
         heading_direction = random.choices(
             population=[k for k, v in heading_probabilities.items()],
-            weights=heading_probabilities.values(),
+            weights=list(heading_probabilities.values()),
             k=1)[0]  # unpack from list
 
-        # logger.debug("self.current_location %s", str(self.current_location))
         logger.debug("Direction: %s", heading_direction.value)
         return heading_direction
 
-    def update_heading_direction(self) -> schemas.Direction:
-        self.heading_direction = self._generate_next_direction()
+    def update_heading_direction(self) -> None:
         """Update heading direction relying on internal logic"""
+        self.heading_direction = self._define_next_direction()
