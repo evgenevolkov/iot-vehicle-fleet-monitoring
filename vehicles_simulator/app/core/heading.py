@@ -76,7 +76,7 @@ class HeadingDirectionManager:
         Define heading direction.
 
         To do it collect each direction probability and use weighted
-        random generator to make final decision. 
+        random generator to make final decision.
         """
         heading_probabilities = self._calculate_heading_probabilities()
         logger.debug("Heading probabilities: %s", str(heading_probabilities))
