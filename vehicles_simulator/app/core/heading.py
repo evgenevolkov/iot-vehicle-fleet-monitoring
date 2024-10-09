@@ -27,7 +27,7 @@ from app.utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-class HeadingDirectionManager():
+class HeadingDirectionManager:
     def __init__(self):
         self.heading_providers: List[Dict[str, object]] = []
         self.heading_direction: schemas.Direction = schemas.Direction.UP
