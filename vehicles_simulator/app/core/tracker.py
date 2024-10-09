@@ -1,6 +1,11 @@
 """Contains implementation of BasicTrackerManager class."""
 import random
-from app.core.interfaces import TrackerManager
+from app.core.interfaces import (
+    TrackerManager,
+    TasksManager,
+    NavigationManager,
+    MessageSender,
+    )
 from app.utils import schemas
 
 
@@ -16,6 +21,9 @@ class BasicTrackerManager(TrackerManager):
     def __init__(
             self,
             statuses_probs: dict[schemas.TrackerStatus: float],
+            tasks_manager: TasksManager,
+            navigation_manager: NavigationManager,
+            message_sender: MessageSender,
             current_status: schemas.TrackerStatus =
                 schemas.TrackerStatus.ONLINE,
             ):
@@ -24,6 +32,10 @@ class BasicTrackerManager(TrackerManager):
 
         self.statuses_values = list(statuses_probs.keys())
         self.statuses_weights = statuses_probs.values()
+        # dependencies
+        self.tasks_manager = tasks_manager
+        self.navigation_manager = navigation_manager
+        self.message_sender = message_sender
 
     def _generate_status(self) -> schemas.TrackerStatus:
         """Simulate ocassional loss of connection with tracker"""
