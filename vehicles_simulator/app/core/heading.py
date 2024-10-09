@@ -1,4 +1,3 @@
-from typing import List
 """
 Implements the HeadingDirectionManager class.
 
