@@ -52,7 +52,8 @@ class HeadingDirectionManager:
             'weight': provider_weight
         })
 
-    def _calculate_heading_probabilities(self) -> Dict[schemas.Direction, float]:
+    def _calculate_heading_probabilities(self) -> Dict[schemas.Direction,
+                                                       float]:
         """
         Iterate over providers, modify  heading directions and apply to
         base probabilities modified by provider's weight.
@@ -89,5 +90,5 @@ class HeadingDirectionManager:
         return heading_direction
 
     def update_heading_direction(self) -> None:
-        self.heading_direction = self._define_next_direction()
         """Update heading direction relying on internal logic"""
+        self.heading_direction = self._define_next_direction()
