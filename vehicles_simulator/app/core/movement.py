@@ -61,12 +61,12 @@ class BasicMovementManager(MovementManager):
         """Increases vehicle speed by 1 if within max_speed limit"""
         self.current_speed = min(self.current_speed + SPEED_CHANGE_STEP,
                                  self.max_speed)
-        logger.debug(f" Increased speed to {self.current_speed}")
+        logger.debug("Increased speed to %s", self.current_speed)
 
     def decrease_speed(self) -> None:
         """Decreases vehicle speed by 1 until 1"""
         self.current_speed = max(self.current_speed - SPEED_CHANGE_STEP, 1)
-        logger.debug(f"Decreased speed to {self.current_speed}")
+        logger.debug("Decreased speed to %s", self.current_speed)
 
     def turn(self, direction: schemas.Direction) -> None:
         """Try to make a turn or report why can't otherwise"""
@@ -114,7 +114,7 @@ class BasicMovementManager(MovementManager):
         If distance value until next turn possibility is greater than
         current speed, then increase speed. Decrease otherwise.
         """
-        logger.debug(f'Curr_speed: {self.current_speed}')
+        logger.debug("Curr_speed: %s", self.current_speed)
         if self.distance_until_turn_allowed > self.current_speed:
             self.increase_speed()
         else:
