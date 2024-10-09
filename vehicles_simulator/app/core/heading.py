@@ -70,7 +70,7 @@ class HeadingDirectionManager:
 
         return heading_probabilities
 
-    def _generate_next_direction(self):
+    def _generate_next_direction(self) -> schemas.Direction:
         """
         Define heading direction.
 
