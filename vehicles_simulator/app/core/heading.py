@@ -71,7 +71,7 @@ class HeadingDirectionManager:
         total = sum(heading_probabilities.values())
         return {k: v / total for k, v in heading_probabilities.items()}
 
-    def _generate_next_direction(self) -> schemas.Direction:
+    def _define_next_direction(self) -> schemas.Direction:
         """
         Define heading direction.
 
@@ -89,5 +89,5 @@ class HeadingDirectionManager:
         return heading_direction
 
     def update_heading_direction(self) -> None:
-        self.heading_direction = self._generate_next_direction()
+        self.heading_direction = self._define_next_direction()
         """Update heading direction relying on internal logic"""
