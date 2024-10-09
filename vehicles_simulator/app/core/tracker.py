@@ -1,5 +1,7 @@
 """Contains implementation of BasicTrackerManager class."""
+from typing import Optional
 import random
+from uuid import uuid4, UUID
 from app.core.interfaces import (
     TrackerManager,
     TasksManager,
@@ -25,11 +27,13 @@ class BasicTrackerManager(TrackerManager):
             tasks_manager: TasksManager,
             navigation_manager: NavigationManager,
             message_sender: MessageSender,
+            vehicle_id: Optional[UUID] = None,
             current_status: schemas.TrackerStatus =
                 schemas.TrackerStatus.ONLINE,
             ):
         self.statuses_probs = statuses_probs
         self.current_status = current_status
+        self.vehicle_id = vehicle_id or uuid4()  # assign if not passed
 
         self.statuses_values = list(statuses_probs.keys())
         self.statuses_weights = statuses_probs.values()
