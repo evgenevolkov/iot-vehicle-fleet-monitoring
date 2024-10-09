@@ -145,3 +145,14 @@ class MovementManager(ABC):
     @abstractmethod
     def move(self):
         pass
+
+
+# --- Other ---
+
+
+class MessageSender(ABC):
+    """Implements connection with tracking data destination"""
+
+    @abstractmethod
+    def send_message(self, message):
+        pass
