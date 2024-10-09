@@ -30,7 +30,7 @@ class BasicTrackerManager(TrackerManager):
             vehicle_id: Optional[UUID] = None,
             current_status: schemas.TrackerStatus =
                 schemas.TrackerStatus.ONLINE,
-            ):
+            ) -> None:
         self.statuses_probs = statuses_probs
         self.current_status = current_status
         self.vehicle_id = vehicle_id or uuid4()  # assign if not passed
