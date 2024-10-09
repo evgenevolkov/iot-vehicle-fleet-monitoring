@@ -63,7 +63,7 @@ class BasicTrackerManager(TrackerManager):
 
         return generated_status
 
-    def get_current_status(self) -> schemas.TrackerStatus:
+    def get_current_tracker_status(self) -> schemas.TrackerStatus:
         """Exposed methed to get current connection status"""
         return self.current_status
 
