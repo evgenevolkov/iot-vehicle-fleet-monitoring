@@ -104,7 +104,7 @@ class BasicMovementManager(MovementManager):
         self._decide_speed_change()
         self.shift = self._get_move_shift()
         self.distance_until_turn_allowed -= 1
-        self._check_can_turn()
+        self._update_turn_permission()
         return self.shift
 
     def _decide_speed_change(self) -> None:
@@ -128,8 +128,7 @@ class BasicMovementManager(MovementManager):
             y=single_shift[1] * self.current_speed)
         return move_shift
 
-    def _check_can_turn(self) -> None:
-
+    def _update_turn_permission(self) -> None:
         """
         Check if a turn is allowed.
 
