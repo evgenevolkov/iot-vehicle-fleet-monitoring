@@ -118,3 +118,26 @@ class BasicTrackerManager(TrackerManager):
         """Helper method to get current time"""
         return datetime.now(timezone.utc).isoformat(timespec="milliseconds")
 
+    def send_tracking_data(self) -> None:
+        """High level method that orchestrate sending telemetry to the
+        endpoint.
+        """
+        tracking_message = self._generate_tracking_message()
+        self._send_message(message=tracking_message)
+
+    def _generate_tracking_message(self) -> None:
+        """Helper method to prepare message to be sent to the endpoint.
+        Validates message to match schema."""
+        self.collect_tracking_data()
+        message_data = VehicleTrackingMessageV1_0_0(
+            **self.tracking_data.model_dump(),
+            schema_version="1.0.0",
+            vehicle_id=self.vehicle_id
+        )
+
+        message_json = message_data.model_dump_json()
+        return message_json
+
+    def _send_message(self, message):
+        """Helpor method that performs method sending"""
+        self.message_sender.send_message(message=message)
