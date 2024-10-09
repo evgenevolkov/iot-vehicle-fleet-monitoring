@@ -1,3 +1,4 @@
+"""Contains implementation of the BasicTaskManager class"""
 import random
 from random import randrange
 from typing import Union
@@ -13,6 +14,10 @@ NAVIGATION_MAP_Y_SIZE = config('NAVIGATION_MAP_Y_SIZE')
 
 
 class BasicTasksManager(TasksManager):
+    """Responsible for getting tasks.
+
+    Simulates retrieval from external source.
+    """
 
     def __init__(self, fail_get_task_probability: float = 0.95):
         self.task_state: schemas.TaskState = schemas.TaskState.IDLE
@@ -42,18 +47,22 @@ class BasicTasksManager(TasksManager):
         return new_task
 
     def initialize_new_task(self, task: schemas.Location):
+        """High level method that processes a new task"""
         self.current_task = task
         self.task_state = schemas.TaskState.IN_PROGRESS
 
     def destination_reached(self):
+        """High level method to perform steps on reaching destination"""
         self.task_state = schemas.TaskState.IDLE
 
     def _generate_random_location(self, task_nav_map) -> schemas.Location:
-
+        """Simulates receiving a new task"""
         x = randrange(start=0, stop=task_nav_map.x_size)
         y = randrange(start=0, stop=task_nav_map.y_size)
 
         return schemas.Location(x=x, y=y)
 
     def _fail_to_get_task(self) -> bool:
+        """Defines if a task is received based on predefine probability.
+        """
         return random.random() < self.fail_get_task_probability

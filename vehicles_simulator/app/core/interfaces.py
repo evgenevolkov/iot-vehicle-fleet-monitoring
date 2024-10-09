@@ -1,9 +1,13 @@
+"""
+This file contains all interfaces, implemented as abstract classes, used
+within the Vehicle class.
+"""
 from typing import List
 from abc import ABC, abstractmethod
 from app.utils import schemas
 
 
-# --- Vehicle class interfaces ---
+# --- Vehicle class dependencies interfaces ---
 
 
 class NavigationManager(ABC):

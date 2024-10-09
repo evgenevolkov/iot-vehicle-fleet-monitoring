@@ -10,6 +10,11 @@ logger = get_logger(__name__)
 
 
 class NavigationMap:
+    """
+    Class maintains a navigation map.
+
+    It is a singleton to guarantee all vehciles locations are consistant.
+    """
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -46,7 +51,9 @@ class NavigationMap:
 
 
 class BasicLocationService(LocationService):
-
+    """Class responsible for tracking vehicle location and maintaining
+    nevigatin map.
+    """
     def __init__(
             self,
             nav_map: NavigationMap,
@@ -77,6 +84,7 @@ class BasicLocationService(LocationService):
         logger.warning("Location overriden to %s", str(location))
 
     def update_location(self, shift: schemas.Shift):
+        """Updates a vehicle location given vehicle shift"""
         new_location = schemas.Location(
             x=self.current_location.x + shift.x,
             y=self.current_location.y + shift.y

@@ -1,3 +1,7 @@
+"""
+Contains implementation of the BasicNavigationManager class and its 
+dependency BasicNavigationManager
+"""
 import math
 from typing import List
 from app.core.heading import HeadingDirectionManager
@@ -88,23 +92,42 @@ class BasicNavigationManager(NavigationManager):
         self._update_statuses()
 
     def initialize_new_task(self, destination: schemas.Location):
+        """High level method that implements new task acceptance"""
         self.destination = destination
         self._update_statuses()
 
     def get_turn_direction(self):
+        """Method to get heading direction. Relies on dependency."""
         self.heading_selector.update_heading_direction()
         return self.heading_selector.heading_direction
 
     def update_location(self, shift: schemas.Shift):
+        """Method to uodate location and class statuses"""
         self.location_service.update_location(shift)
         self._update_statuses()
 
     def _update_statuses(self):
+        """Implements statuss updates"""
         self.destination_tracker.update_state()
         self.allowed_zone_manager.update_state()
 
 
 class BasicDestinationTracker(DestinationTracker):
+    """Class responsible for tracking destination.
+
+    Keeps track destination related telemetry:
+    - distance to destination
+    - if destination is reached
+
+    Can get heading directions to destination.
+
+    A destination is reached if vehicle is within defined range from
+    destination.
+
+    Class does not define destination. Instead it accepts setting of
+    the destination from extrnal call. 
+    No validations or destination definition applied.
+    """
     def __init__(
             self,
             location_service: LocationService,
@@ -151,10 +174,14 @@ class BasicDestinationTracker(DestinationTracker):
         self._distance_to_destination = value
 
     def update_state(self):
+        """High level method that orchestrates telemetry update."""
         self.update_destination_reached_state()
         self.update_distance_to_destination()
 
     def get_heading_directions(self) -> List[schemas.Direction]:
+        """Defines heading directions that would move vehicle towards
+        the destination.
+        """
         diff = self.destination.x - self.location_service.current_location.x
         heading_directions = []
         if diff > self.destination_reached_threshold:
@@ -170,6 +197,9 @@ class BasicDestinationTracker(DestinationTracker):
         return heading_directions
 
     def update_distance_to_destination(self):
+        """Calculates distance to destination and updates corresponding
+        property.
+        """
         distance = math.sqrt(
             (
                 self.location_service.current_location.x
@@ -184,6 +214,9 @@ class BasicDestinationTracker(DestinationTracker):
         self.distance_to_destination = distance
 
     def update_destination_reached_state(self) -> None:
+        """Checks if destination is within threshold and updates
+        corresponding property accordingly.
+        """
         reached = all([
             abs(self.destination.x
                 - self.location_service.current_location.x
@@ -198,6 +231,12 @@ class BasicDestinationTracker(DestinationTracker):
 
 
 class BasicAllowedZoneManager(AllowedZoneManager):
+    """
+    Class responsible for tracking if a vehicle is within allowed zone.
+
+    Maintains boolean `out of zone` indicator property and a list of
+    violated borders.
+    """
     def __init__(
             self,
             location_service: LocationService
@@ -227,6 +266,9 @@ class BasicAllowedZoneManager(AllowedZoneManager):
         self._zone_borders_breached = borders_breached
 
     def update_state(self):
+        """Calculates if any of the borders is breached and updates 
+        `out of borders` and violated borders property accordingly.
+        """
         self._reset_out_of_zone()
 
         if self.location_service.current_location.x < 0:
@@ -245,5 +287,6 @@ class BasicAllowedZoneManager(AllowedZoneManager):
             self.out_of_zone = True
 
     def _reset_out_of_zone(self):
+        """Helper method to reset properties"""
         self.out_of_zone = False
         self.zone_borders_breached = []

@@ -1,3 +1,4 @@
+"""Contains implementation of BasicMovementManager"""
 import random
 from decouple import config
 from app.core.interfaces import (
@@ -14,7 +15,29 @@ MAX_SPEED = int(config('MAX_SPEED'))
 
 
 class BasicMovementManager(MovementManager):
+    """
+    Class responsible for:
+     - performing vehicle movement
+     - tracking related telemetry
 
+    Key logic:
+
+    - Turning:
+        Class responds on external turn attempts. If a turn is allowed,
+        it changes the vehicle's heading direction. Otherwise it logs a
+        warning and keeps the heading direction maintained.
+
+        A turn is allowed if both following conditions are met:
+        1. Speed equals or less than a defined threshold.
+        2. Distance until next turn is equal to 0.
+        This intends to make simulation closer to real world conditions.
+
+    - Speed change:
+        A vehicle can change its speed only gradually, by a defined
+        change stap per each movement call. The logic whether increase
+        or decrease the speed is implemented in the 
+        `_decide_speed_change` method.
+    """
     def __init__(
             self,
             current_direction: schemas.Direction = schemas.Direction.UP,
@@ -58,6 +81,19 @@ class BasicMovementManager(MovementManager):
             self.decrease_speed()
 
     def move(self) -> schemas.Shift:
+        """
+        High level method that implements vehicle movement forward
+        logic.
+
+        Result of move is calculating a shift value, that is a change of
+        the vehicle location on the map.
+
+        Steps:
+        1. Decide if speed should be changed.
+        2. Calculate vehicle shift.
+        3. Decrease value of the distance until next turn is allowed.
+        4. Update turn possibility.
+        """
         self._decide_speed_change()
         self.shift = self._get_move_shift()
         self.distance_until_turn_allowed -= 1
