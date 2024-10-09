@@ -19,7 +19,7 @@ class BasicTasksManager(TasksManager):
     Simulates retrieval from external source.
     """
 
-    def __init__(self, fail_get_task_probability: float = 0.95):
+    def __init__(self, fail_get_task_probability: float = 0.95) -> None:
         self.task_state: schemas.TaskState = schemas.TaskState.IDLE
         self.current_task: Union[schemas.Location, None] = None
         # to simulate no pendding tasks received

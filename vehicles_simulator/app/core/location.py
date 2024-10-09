@@ -27,7 +27,7 @@ class NavigationMap:
     def __init__(
             self,
             map_size: schemas.MapSize
-            ):
+            ) -> None:
         self._x_size = map_size.x_size
         self._y_size = map_size.y_size
 
@@ -58,7 +58,7 @@ class BasicLocationService(LocationService):
             self,
             nav_map: NavigationMap,
             current_location: schemas.Location = schemas.Location(x=1, y=1),
-            ):
+            ) -> None:
         self.nav_map: NavigationMap = nav_map
         self._current_location: schemas.Location = current_location
 
@@ -78,12 +78,12 @@ class BasicLocationService(LocationService):
     def current_location(self, location: schemas.Location):
         self._current_location = location
 
-    def override_current_location(self, location: schemas.Location):
+    def override_current_location(self, location: schemas.Location) -> None:
         """Helper method to redefine location of a vehicle"""
         self.current_location = location
         logger.warning("Location overriden to %s", str(location))
 
-    def update_location(self, shift: schemas.Shift):
+    def update_location(self, shift: schemas.Shift) -> None:
         """Updates a vehicle location given vehicle shift"""
         new_location = schemas.Location(
             x=self.current_location.x + shift.x,

@@ -74,7 +74,7 @@ class BasicNavigationManager(NavigationManager):
     def out_of_zone(self):
         return self.allowed_zone_manager.out_of_zone
 
-    def move_to_destination(self):
+    def move_to_destination(self) -> None:
         """Main script to try to get to destination"""
         if self.destination_reached:
             logger.warning("Got `move` command while already at destination")
@@ -91,22 +91,22 @@ class BasicNavigationManager(NavigationManager):
         self.update_location(movement_shift)
         self._update_statuses()
 
-    def initialize_new_task(self, destination: schemas.Location):
+    def initialize_new_task(self, destination: schemas.Location) -> None:
         """High level method that implements new task acceptance"""
         self.destination = destination
         self._update_statuses()
 
-    def get_turn_direction(self):
+    def get_turn_direction(self) -> schemas.Direction:
         """Method to get heading direction. Relies on dependency."""
         self.heading_selector.update_heading_direction()
         return self.heading_selector.heading_direction
 
-    def update_location(self, shift: schemas.Shift):
+    def update_location(self, shift: schemas.Shift) -> None:
         """Method to uodate location and class statuses"""
         self.location_service.update_location(shift)
         self._update_statuses()
 
-    def _update_statuses(self):
+    def _update_statuses(self) -> None:
         """Implements statuss updates"""
         self.destination_tracker.update_state()
         self.allowed_zone_manager.update_state()
@@ -173,7 +173,7 @@ class BasicDestinationTracker(DestinationTracker):
     def distance_to_destination(self, value: bool) -> None:
         self._distance_to_destination = value
 
-    def update_state(self):
+    def update_state(self) -> None:
         """High level method that orchestrates telemetry update."""
         self.update_destination_reached_state()
         self.update_distance_to_destination()
@@ -196,7 +196,7 @@ class BasicDestinationTracker(DestinationTracker):
             heading_directions.append(schemas.Direction.DOWN)
         return heading_directions
 
-    def update_distance_to_destination(self):
+    def update_distance_to_destination(self) -> None:
         """Calculates distance to destination and updates corresponding
         property.
         """
@@ -240,7 +240,7 @@ class BasicAllowedZoneManager(AllowedZoneManager):
     def __init__(
             self,
             location_service: LocationService
-            ):
+            ) -> None:
 
         self.location_service: LocationService = location_service
         self._out_of_zone: bool = False
@@ -265,7 +265,7 @@ class BasicAllowedZoneManager(AllowedZoneManager):
             ):
         self._zone_borders_breached = borders_breached
 
-    def update_state(self):
+    def update_state(self) -> None:
         """Calculates if any of the borders is breached and updates 
         `out of borders` and violated borders property accordingly.
         """
@@ -286,7 +286,7 @@ class BasicAllowedZoneManager(AllowedZoneManager):
         if len(self.zone_borders_breached) > 0:
             self.out_of_zone = True
 
-    def _reset_out_of_zone(self):
+    def _reset_out_of_zone(self) -> None:
         """Helper method to reset properties"""
         self.out_of_zone = False
         self.zone_borders_breached = []

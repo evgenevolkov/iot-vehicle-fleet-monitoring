@@ -45,7 +45,7 @@ class BasicMovementManager(MovementManager):
             current_speed: int = 0,
             distance_until_turn_allowed: int = 0,
             can_turn: bool = True,
-            ):
+            ) -> None:
 
         self.max_speed: int = max_speed
         self.current_speed: int = current_speed

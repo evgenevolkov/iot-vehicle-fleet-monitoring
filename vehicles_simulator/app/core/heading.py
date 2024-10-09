@@ -32,7 +32,7 @@ logger = get_logger(__name__)
 
 class HeadingDirectionManager():
     def __init__(self):
-        self.heading_providers: List = []
+        self.heading_providers: List[Dict[str, object]] = []
         self.heading_direction: schemas.Direction = schemas.Direction.UP
 
     def register_heading_provider(
@@ -40,7 +40,7 @@ class HeadingDirectionManager():
             provider: HeadingDirectionsInterface,
             provider_name: str,
             provider_weight: float
-            ):
+            ) -> None:
         """Register a heading direction provider"""
         self.heading_providers.append({
             'entity': provider,
