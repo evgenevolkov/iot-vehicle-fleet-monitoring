@@ -50,15 +50,15 @@ class BasicMovementManager(MovementManager):
         self.distance_until_turn_allowed: int = distance_until_turn_allowed
         self.shift: schemas.Shift
 
-    def increase_speed(self):
+    def increase_speed(self) -> None:
         self.current_speed = min(self.current_speed + 1, self.max_speed)
         logger.debug(f" Increased speed to {self.current_speed}")
 
-    def decrease_speed(self):
+    def decrease_speed(self) -> None:
         self.current_speed = max(self.current_speed - 1, 1)
         logger.debug(f"Decreased speed to {self.current_speed}")
 
-    def turn(self, direction: schemas.Direction):
+    def turn(self, direction: schemas.Direction) -> None:
         if self.can_turn:
             self.current_direction = direction
             self.distance_until_turn_allowed = \
@@ -96,24 +96,24 @@ class BasicMovementManager(MovementManager):
         self._check_can_turn()
         return self.shift
 
-    def _decide_speed_change(self):
+    def _decide_speed_change(self) -> None:
         logger.debug(f'Curr_speed: {self.current_speed}')
         if self.distance_until_turn_allowed > self.current_speed:
             self.increase_speed()
         else:
             self.decrease_speed()
 
-    def _get_move_shift(self):
+    def _get_move_shift(self) -> schemas.Shift:
         single_shift = schemas.Movement[self.current_direction.name].value
         move_shift = schemas.Shift(
             x=single_shift[0] * self.current_speed,
             y=single_shift[1] * self.current_speed)
         return move_shift
 
-    def _check_can_turn(self):
+    def _check_can_turn(self) -> None:
         self.can_turn = all([
             self.current_speed <= 1,
             self.distance_until_turn_allowed == 0])
 
-    def _define_distance_until_turn(self):
+    def _define_distance_until_turn(self) -> int:
         return int(random.randint(1, 49) ** 0.5) + 2
