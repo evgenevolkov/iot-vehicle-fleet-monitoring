@@ -7,7 +7,14 @@ from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-MAX_SPEED = int(config('MAX_SPEED'))
+MAX_SPEED = config('MAX_SPEED', cast=int)
+TURN_DISTANCE_BASE = config('TURN_DISTANCE_BASE', cast=int)
+TURN_DISTANCE_OFFSET = config('TURN_DISTANCE_OFFSET', cast=int)
+TURN_SPEED_THRESHOLD = config('TURN_SPEED_THRESHOLD', cast=int)
+SPEED_CHANGE_STEP = config('SPEED_CHANGE_STEP', cast=int)
+RANDOM_SEED = config('RANDOM_SEED', cast=int)
+
+random.seed(RANDOM_SEED)
 
 
 class BasicMovementManager(MovementManager):
@@ -52,12 +59,13 @@ class BasicMovementManager(MovementManager):
 
     def increase_speed(self) -> None:
         """Increases vehicle speed by 1 if within max_speed limit"""
-        self.current_speed = min(self.current_speed + 1, self.max_speed)
+        self.current_speed = min(self.current_speed + SPEED_CHANGE_STEP,
+                                 self.max_speed)
         logger.debug(f" Increased speed to {self.current_speed}")
 
     def decrease_speed(self) -> None:
         """Decreases vehicle speed by 1 until 1"""
-        self.current_speed = max(self.current_speed - 1, 1)
+        self.current_speed = max(self.current_speed - SPEED_CHANGE_STEP, 1)
         logger.debug(f"Decreased speed to {self.current_speed}")
 
     def turn(self, direction: schemas.Direction) -> None:
@@ -74,7 +82,7 @@ class BasicMovementManager(MovementManager):
             logger.debug("Distance until turn allowed %s",
                          self.distance_until_turn_allowed)
             return
-        elif self.current_speed > 2:
+        elif self.current_speed > TURN_SPEED_THRESHOLD:
             logger.warning("Can't make turn, because speed too high: %i"
                            " will decrease speed instead", self.current_speed)
             self.decrease_speed()
@@ -130,7 +138,7 @@ class BasicMovementManager(MovementManager):
         2. Distance until turn allowed is 0
         """
         self.can_turn = all([
-            self.current_speed <= 1,
+            self.current_speed <= TURN_SPEED_THRESHOLD,
             self.distance_until_turn_allowed == 0])
 
     def _define_distance_until_turn(self) -> int:
@@ -138,4 +146,5 @@ class BasicMovementManager(MovementManager):
 
         Currently, for sample purpose, simulation formula is applied.
         """
-        return int(random.randint(1, 49) ** 0.5) + 2
+        return int(random.randint(1, TURN_DISTANCE_BASE) ** 0.5) \
+            + TURN_DISTANCE_OFFSET
