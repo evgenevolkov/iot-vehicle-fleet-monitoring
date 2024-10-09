@@ -82,7 +82,7 @@ class HeadingDirectionManager:
         logger.debug("Heading probabilities: %s", str(heading_probabilities))
         heading_direction = random.choices(
             population=[k for k, v in heading_probabilities.items()],
-            weights=heading_probabilities.values(),
+            weights=list(heading_probabilities.values()),
             k=1)[0]  # unpack from list
 
         logger.debug("Direction: %s", heading_direction.value)
