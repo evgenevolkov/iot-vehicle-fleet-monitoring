@@ -1,3 +1,7 @@
+"""
+Contains implementation of the BasicNavigationManager class and its 
+dependency BasicNavigationManager
+"""
 import math
 from typing import List
 from app.core.heading import HeadingDirectionManager
@@ -8,9 +12,7 @@ from app.core.interfaces import (
     MovementManager,
     NavigationManager,
 )
-from app.utils import (
-    schemas,
-    )
+from app.utils import schemas
 from app.utils.logger import get_logger
 
 
@@ -70,7 +72,7 @@ class BasicNavigationManager(NavigationManager):
     def out_of_zone(self):
         return self.allowed_zone_manager.out_of_zone
 
-    def move_to_destination(self):
+    def move_to_destination(self) -> None:
         """Main script to try to get to destination"""
         if self.destination_reached:
             logger.warning("Got `move` command while already at destination")
@@ -87,24 +89,43 @@ class BasicNavigationManager(NavigationManager):
         self.update_location(movement_shift)
         self._update_statuses()
 
-    def initialize_new_task(self, destination: schemas.Location):
+    def initialize_new_task(self, destination: schemas.Location) -> None:
+        """High level method that implements new task acceptance"""
         self.destination = destination
         self._update_statuses()
 
-    def get_turn_direction(self):
+    def get_turn_direction(self) -> schemas.Direction:
+        """Method to get heading direction. Relies on dependency."""
         self.heading_selector.update_heading_direction()
         return self.heading_selector.heading_direction
 
-    def update_location(self, shift: schemas.Shift):
+    def update_location(self, shift: schemas.Shift) -> None:
+        """Method to uodate location and class statuses"""
         self.location_service.update_location(shift)
         self._update_statuses()
 
-    def _update_statuses(self):
+    def _update_statuses(self) -> None:
+        """Implements statuss updates"""
         self.destination_tracker.update_state()
         self.allowed_zone_manager.update_state()
 
 
 class BasicDestinationTracker(DestinationTracker):
+    """Class responsible for tracking destination.
+
+    Keeps track destination related telemetry:
+    - distance to destination
+    - if destination is reached
+
+    Can get heading directions to destination.
+
+    A destination is reached if vehicle is within defined range from
+    destination.
+
+    Class does not define destination. Instead it accepts setting of
+    the destination from extrnal call. 
+    No validations or destination definition applied.
+    """
     def __init__(
             self,
             location_service: LocationService,
@@ -150,11 +171,15 @@ class BasicDestinationTracker(DestinationTracker):
     def distance_to_destination(self, value: bool) -> None:
         self._distance_to_destination = value
 
-    def update_state(self):
+    def update_state(self) -> None:
+        """High level method that orchestrates telemetry update."""
         self.update_destination_reached_state()
         self.update_distance_to_destination()
 
     def get_heading_directions(self) -> List[schemas.Direction]:
+        """Defines heading directions that would move vehicle towards
+        the destination.
+        """
         diff = self.destination.x - self.location_service.current_location.x
         heading_directions = []
         if diff > self.destination_reached_threshold:
@@ -169,7 +194,10 @@ class BasicDestinationTracker(DestinationTracker):
             heading_directions.append(schemas.Direction.DOWN)
         return heading_directions
 
-    def update_distance_to_destination(self):
+    def update_distance_to_destination(self) -> None:
+        """Calculates distance to destination and updates corresponding
+        property.
+        """
         distance = math.sqrt(
             (
                 self.location_service.current_location.x
@@ -184,6 +212,9 @@ class BasicDestinationTracker(DestinationTracker):
         self.distance_to_destination = distance
 
     def update_destination_reached_state(self) -> None:
+        """Checks if destination is within threshold and updates
+        corresponding property accordingly.
+        """
         reached = all([
             abs(self.destination.x
                 - self.location_service.current_location.x
@@ -198,10 +229,16 @@ class BasicDestinationTracker(DestinationTracker):
 
 
 class BasicAllowedZoneManager(AllowedZoneManager):
+    """
+    Class responsible for tracking if a vehicle is within allowed zone.
+
+    Maintains boolean `out of zone` indicator property and a list of
+    violated borders.
+    """
     def __init__(
             self,
             location_service: LocationService
-            ):
+            ) -> None:
 
         self.location_service: LocationService = location_service
         self._out_of_zone: bool = False
@@ -226,7 +263,10 @@ class BasicAllowedZoneManager(AllowedZoneManager):
             ):
         self._zone_borders_breached = borders_breached
 
-    def update_state(self):
+    def update_state(self) -> None:
+        """Calculates if any of the borders is breached and updates 
+        `out of borders` and violated borders property accordingly.
+        """
         self._reset_out_of_zone()
 
         if self.location_service.current_location.x < 0:
@@ -244,6 +284,7 @@ class BasicAllowedZoneManager(AllowedZoneManager):
         if len(self.zone_borders_breached) > 0:
             self.out_of_zone = True
 
-    def _reset_out_of_zone(self):
+    def _reset_out_of_zone(self) -> None:
+        """Helper method to reset properties"""
         self.out_of_zone = False
         self.zone_borders_breached = []

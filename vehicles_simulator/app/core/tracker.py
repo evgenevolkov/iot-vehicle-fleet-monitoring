@@ -1,10 +1,18 @@
+"""Contains implementation of BasicTrackerManager class."""
 import random
 from app.core.interfaces import TrackerManager
 from app.utils import schemas
 
 
 class BasicTrackerManager(TrackerManager):
+    """Class responcible for centralized tracking of all vehicle
+    telemetry.
 
+    Queries all vehicle dependencies to retrieve velues.
+    Kepps track of telemetry values.
+    Simulates connection loss.
+    Sends telemetry to endpoint.
+    """
     def __init__(
             self,
             statuses_probs: dict[schemas.TrackerStatus: float],
@@ -18,8 +26,7 @@ class BasicTrackerManager(TrackerManager):
         self.statuses_weights = statuses_probs.values()
 
     def _generate_status(self) -> schemas.TrackerStatus:
-        """Mimic ocassional loss of connection with tracker"""
-
+        """Simulate ocassional loss of connection with tracker"""
         generated_status = random.choices(
             population=self.statuses_values,
             weights=self.statuses_weights,
@@ -29,6 +36,7 @@ class BasicTrackerManager(TrackerManager):
         return generated_status
 
     def get_current_status(self) -> schemas.TrackerStatus:
+        """Exposed methed to get current connection status"""
         return self.current_status
 
     def update(self) -> None:

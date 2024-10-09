@@ -1,27 +1,42 @@
 # This is a vehicles-monitoring simulation project
 
-_Detailed description to be done (TBD)_
-
+The project simulates a fleet of autonomous vehicles with tracker that regurlary sends telemetry to an endpoint.
 
 ## Project consists of the following components
 
+_Project in progress_
+
 __Vehicles simulator__ application. (`vehicles_simulator` folder)
 
-_TBD_
+    This simulates fleet of vehicles. To do it a number of vehilces is instantinated and each runs in infinite loop of getting a task with destination, reaching destination, reporting and getting a new one. 
+    Besides that, each vehicle regulary sends telemetry to an endpoint
+
+__Telemetry monitoring__ _in progress_
+
+    Collecting telemetry is implemented leveraging AWS. 
+    Specifically, an SQS is set up as an endpoint for receiving telemetry. This allows:
+    - asyncroneously collect data
+    - decouple sender from reciever 
+    - guarantee that each message is collected and stored
 
 ## Highlights:
 
 _TBD_
 
-
 # Stack
 
-_TBD_
+Language: __Python__
+Data validation: __Pydantic__
+Infrastructure-as-Code: __Terraform__, __terraformlocal__, __localstack__
+Infrastructure: 
+    Message brocker: __AWS SQS__
+    NoSQL database: __AWS DynamoDB__
+Testing, linting: __Pytest__, __MyPy__, __pylint__, __flake8__
 
 ## Prerequisites:
 
 To run this project, you should have these tools installed:
-__Git, Python, PIP, Make__
+__Git, Python, PIP, Make, Docker__
 It is assumed that you run on __MacOS__. Otherwise you might need adjust accordingly. 
 
 ## Install

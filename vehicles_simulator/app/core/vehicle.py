@@ -1,7 +1,7 @@
-# pylint: disable=missing-module-docstring
-# pylint: disable=missing-class-docstring
-# pylint: disable=missing-function-docstring
-# pylint: disable=import-error
+"""
+Module responsible for instantination of a vehicle and orchestration
+of submodules
+"""
 import random
 from decouple import config
 from app.core.interfaces import (
@@ -9,9 +9,7 @@ from app.core.interfaces import (
     TasksManager,
     NavigationManager,
     )
-from app.utils import (
-    schemas,
-    )
+from app.utils import schemas
 from app.utils.logger import get_logger
 
 
@@ -21,7 +19,9 @@ logger = get_logger(__name__)
 
 
 class Vehicle:
-
+    """Vehicle instance class. Implements vehicle high level logic, defined
+    in `run_execution_step` method.
+    """
     def __init__(
             self,
             navigation_manager: NavigationManager,
@@ -34,16 +34,19 @@ class Vehicle:
         self.tracker_manager = tracker_manager
 
     def get_current_location(self):
+        """Method to get vehicle current location"""
         return self.navigation_manager.current_location
 
     def get_current_tracker_status(self):
         return self.tracker_manager.get_current_status()
+        """Method to get tracker status vehicle current location"""
 
     def get_current_task_status(self):
+        """Method to get task manager status"""
         return self.tasks_manager.task_state
 
     def run_execution_step(self):
-        """main execution logic"""
+        """Main vehicle execution logic"""
 
         self.tracker_manager.update()
 
