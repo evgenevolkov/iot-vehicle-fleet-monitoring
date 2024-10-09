@@ -71,6 +71,7 @@ class BasicTrackerManager(TrackerManager):
         """Generates a new status value based on dict of status and
         probabilies of a value to be set."""
         self.current_status = self._generate_status()
+        self.collect_tracking_data()
 
     def collect_tracking_data(self) -> None:
         """Main function to collect all traking metrics"""
