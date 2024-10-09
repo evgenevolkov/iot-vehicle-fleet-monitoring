@@ -37,10 +37,20 @@ class BasicTrackerManager(TrackerManager):
 
         self.statuses_values = list(statuses_probs.keys())
         self.statuses_weights = statuses_probs.values()
+        self.tracking_data = None  # placeholder
+
         # dependencies
         self.tasks_manager = tasks_manager
         self.navigation_manager = navigation_manager
         self.message_sender = message_sender
+
+    @property
+    def tracking_data(self):
+        return self._tracking_data
+
+    @tracking_data.setter
+    def tracking_data(self, value):
+        self._tracking_data = value
 
     def _generate_status(self) -> schemas.TrackerStatus:
         """Simulate ocassional loss of connection with tracker"""
