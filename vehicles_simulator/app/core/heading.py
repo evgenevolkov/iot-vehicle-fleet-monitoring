@@ -68,7 +68,8 @@ class HeadingDirectionManager:
                 in heading_probabilities.items()
             }
 
-        return heading_probabilities
+        total = sum(heading_probabilities.values())
+        return {k: v / total for k, v in heading_probabilities.items()}
 
     def _generate_next_direction(self) -> schemas.Direction:
         """
@@ -84,7 +85,6 @@ class HeadingDirectionManager:
             weights=heading_probabilities.values(),
             k=1)[0]  # unpack from list
 
-        # logger.debug("self.current_location %s", str(self.current_location))
         logger.debug("Direction: %s", heading_direction.value)
         return heading_direction
 
