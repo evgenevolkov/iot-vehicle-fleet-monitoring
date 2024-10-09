@@ -52,8 +52,7 @@ class HeadingDirectionManager:
             'weight': provider_weight
         })
 
-    def _get_heading_probabilities(self):
-
+    def _calculate_heading_probabilities(self) -> Dict[schemas.Direction, float]:
         """
         Iterate over providers, modify  heading directions and apply to
         base probabilities modified by provider's weight.
@@ -72,14 +71,14 @@ class HeadingDirectionManager:
         return heading_probabilities
 
     def _generate_next_direction(self):
-        heading_probabilities = self._get_heading_probabilities()
-        logger.debug("heading probabilities: %s", str(heading_probabilities))
         """
         Define heading direction.
 
         To do it collect each direction probability and use weighted
         random generator to make final decision. 
         """
+        heading_probabilities = self._calculate_heading_probabilities()
+        logger.debug("Heading probabilities: %s", str(heading_probabilities))
         heading_direction = random.choices(
             population=[k for k, v in heading_probabilities.items()],
             weights=heading_probabilities.values(),
