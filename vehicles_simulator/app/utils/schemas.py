@@ -48,3 +48,15 @@ class Vehicle(BaseModel):
     speed: NonNegativeInt
     tracker_status: Literal[TrackerStatus.ONLINE, TrackerStatus.OFFLINE]
     engine_state: Literal[TrackerStatus.ONLINE, TrackerStatus.OFFLINE]
+
+
+class TrackingData(BaseModel):
+    """Schema for metricks that are stored by Tracking module"""
+    task_state: Literal['Idle', 'In progress']
+    destination: Location
+    vehicle_location: Location
+    vehicle_speed: NonNegativeInt
+    heading_direction: Literal['Up', 'Down', 'Left', 'Right']
+    distance_to_destination: NonNegativeFloat
+    out_of_zone_status: bool
+    created_time: datetime
