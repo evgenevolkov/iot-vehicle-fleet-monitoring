@@ -7,6 +7,7 @@ from app.core.interfaces import (
     MessageSender,
     )
 from app.utils import schemas
+from common.schemas.sqs_messages import VehicleTrackingMessageV1_0_0
 
 
 class BasicTrackerManager(TrackerManager):
