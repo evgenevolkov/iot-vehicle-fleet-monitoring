@@ -13,9 +13,7 @@ from app.core.interfaces import (
     TasksManager,
     NavigationManager,
     )
-from app.utils import (
-    schemas,
-    )
+from app.utils import schemas
 from app.utils.logger import get_logger
 
 

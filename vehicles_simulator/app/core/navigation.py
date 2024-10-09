@@ -12,9 +12,7 @@ from app.core.interfaces import (
     MovementManager,
     NavigationManager,
 )
-from app.utils import (
-    schemas,
-    )
+from app.utils import schemas
 from app.utils.logger import get_logger
 
 
