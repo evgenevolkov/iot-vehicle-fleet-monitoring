@@ -88,6 +88,6 @@ class HeadingDirectionManager:
         logger.debug("Direction: %s", heading_direction.value)
         return heading_direction
 
-    def update_heading_direction(self) -> schemas.Direction:
+    def update_heading_direction(self) -> None:
         self.heading_direction = self._generate_next_direction()
         """Update heading direction relying on internal logic"""
