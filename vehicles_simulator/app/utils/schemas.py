@@ -47,7 +47,6 @@ class Vehicle(BaseModel):
     location: Location
     speed: NonNegativeInt
     tracker_status: Literal[TrackerStatus.ONLINE, TrackerStatus.OFFLINE]
-    engine_state: Literal[TrackerStatus.ONLINE, TrackerStatus.OFFLINE]
 
 
 class TrackingData(BaseModel):
