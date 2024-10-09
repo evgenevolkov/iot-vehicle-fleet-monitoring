@@ -28,6 +28,13 @@ logger = get_logger(__name__)
 
 
 class HeadingDirectionManager:
+    INITIAL_HEADING_PROBABILITIES = {
+        schemas.Direction.UP: 25,
+        schemas.Direction.DOWN: 25,
+        schemas.Direction.LEFT: 25,
+        schemas.Direction.RIGHT: 25
+    }
+
     def __init__(self):
         self.heading_providers: List[Dict[str, object]] = []
         self.heading_direction: schemas.Direction = schemas.Direction.UP
@@ -46,17 +53,12 @@ class HeadingDirectionManager:
         })
 
     def _get_heading_probabilities(self):
-        heading_probabilities = {
-            schemas.Direction.UP: 10,
-            schemas.Direction.DOWN: 10,
-            schemas.Direction.LEFT: 10,
-            schemas.Direction.RIGHT: 10
-        }
 
         """
         Iterate over providers, modify  heading directions and apply to
         base probabilities modified by provider's weight.
         """
+        heading_probabilities = self.INITIAL_HEADING_PROBABILITIES.copy()
         for provider in self.heading_providers:
             provider['entity'].update_heading_directions()
             provider_headings = provider['entity'].heading_directions
