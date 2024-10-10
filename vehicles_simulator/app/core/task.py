@@ -3,8 +3,9 @@ import random
 from random import randrange
 from typing import Union
 from decouple import config
-from app.utils import schemas
+
 from app.core.interfaces import TasksManager
+from app.utils import schemas
 from app.utils.logger import get_logger
 
 
