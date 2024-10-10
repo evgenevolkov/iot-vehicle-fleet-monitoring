@@ -27,3 +27,10 @@ variable "endpoint_port" {
   type        = string
   default     = "4566"
 }
+
+variable "sqs_queue_name" {
+  description = "Name of the SQS queue for vehicle tracking"
+  type        = string
+  default     = "vehicle-tracking"
+}
+

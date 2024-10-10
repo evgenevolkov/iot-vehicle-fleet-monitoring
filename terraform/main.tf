@@ -33,6 +33,12 @@ provider "aws" {
   }
 }
 
+resource "aws_sqs_queue" "vehicle_tracking" {
+  name                              = var.sqs_queue_name
+  fifo_queue                        = false
+  message_retention_seconds         = 3600
+}
+
 
 resource "aws_iam_role" "lambda_executor_role" {
   name = var.lambda_role_name
