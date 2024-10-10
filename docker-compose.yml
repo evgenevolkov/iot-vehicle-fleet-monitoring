@@ -1,0 +1,17 @@
+version: '3.2'
+services:
+  localstack:
+    image: localstack/localstack-full:0.11.6
+    container_name: ${LOCALSTACK_DOCKER_NAME:-localstack-main}
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+      - PERSISTENCE=1
+      - WEB_UI=true 
+      - EXTRA_CLI_ARGS=--web
+    volumes:
+      - './.localstack:/tmp/localstack_1'
+      - '/var/run/docker.sock:/var/run/docker.sock'
