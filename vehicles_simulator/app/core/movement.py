@@ -104,7 +104,7 @@ class BasicMovementManager(MovementManager):
         """
         self._decide_speed_change()
         self.shift = self._get_move_shift()
-        self.distance_until_turn_allowed -= 1
+        self.distance_until_turn_allowed -= self.current_speed
         self._update_turn_permission()
         return self.shift
 
