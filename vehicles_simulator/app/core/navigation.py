@@ -73,7 +73,7 @@ class BasicNavigationManager(NavigationManager):
         return self.movement_manager.distance_until_turn_allowed
 
     @property
-    def out_of_zone(self):
+    def out_of_zone_status(self):
         return self.allowed_zone_manager.out_of_zone
 
     def move_to_destination(self) -> None:
