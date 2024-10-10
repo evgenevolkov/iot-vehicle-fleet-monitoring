@@ -67,3 +67,56 @@ resource "aws_iam_role" "lambda_executor_role" {
   })
 }
 
+resource "aws_iam_policy" "lambda_executor_policy" {
+  name = "lambda_executor_policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
+        ],
+        Resource = aws_sqs_queue.vehicle_tracking.arn
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "dynamodb:PutItem"
+        ],
+        Resource = aws_dynamodb_table.vehicle_tracking.arn
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_executor_attachment" {
+  role       = aws_iam_role.lambda_executor_role.name
+  policy_arn = aws_iam_policy.lambda_executor_policy.arn
+}
+
+resource "aws_lambda_function" "sqs_to_dynamodb" {
+  function_name = var.lambda_function_name
+  role          = aws_iam_role.lambda_executor_role.arn
+  runtime       = "python3.9"
+  handler       = "lambda_function.lambda_handler"
+  filename      = "zipped_lambda_code/sqs_to_dynamodb/lambda.zip"
+
+  environment {
+    variables = {
+      DYNAMODB_TABLE = aws_dynamodb_table.vehicle_tracking.name
+    }
+  }
+}

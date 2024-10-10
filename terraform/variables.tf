@@ -16,18 +16,6 @@ variable "aws_region" {
   default     = "eu-central-1"
 }
 
-variable "endpoint_address" {
-  description = "AWS resources host"
-  type        = string
-  default     = "localhost"
-}
-
-variable "endpoint_port" {
-  description = "Port used to acces AWS resourses at host"
-  type        = string
-  default     = "4566"
-}
-
 variable "sqs_queue_name" {
   description = "Name of the SQS queue for vehicle tracking"
   type        = string
@@ -40,3 +28,26 @@ variable "dynamodb_table_name" {
   default     = "vehicle-tracking"
 }
 
+variable "lambda_role_name" {
+  description = "The name of the IAM role for Lambda execution"
+  type        = string
+  default     = "lambda_executor_role"
+}
+
+variable "lambda_function_name" {
+  description = "The name of the Lambda function"
+  type        = string
+  default     = "sqs-to-dynamodb"
+}
+
+variable "endpoint_address" {
+  description = "AWS resources host"
+  type        = string
+  default     = "localhost"
+}
+
+variable "endpoint_port" {
+  description = "Port used to acces AWS resourses at host"
+  type        = string
+  default     = "4566"
+}
