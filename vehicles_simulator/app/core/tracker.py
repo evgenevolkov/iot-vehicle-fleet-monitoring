@@ -27,7 +27,7 @@ class BasicTrackerManager(TrackerManager):
             statuses_probs: dict[schemas.TrackerStatus: float],
             tasks_manager: TasksManager,
             navigation_manager: NavigationManager,
-            message_sender: MessageSender,
+            # message_sender: MessageSender,
             vehicle_id: Optional[UUID] = None,
             current_status: schemas.TrackerStatus =
                 schemas.TrackerStatus.ONLINE,
@@ -43,7 +43,7 @@ class BasicTrackerManager(TrackerManager):
         # dependencies
         self.tasks_manager = tasks_manager
         self.navigation_manager = navigation_manager
-        self.message_sender = message_sender
+        # self.message_sender = message_sender
 
     @property
     def tracking_data(self):
@@ -140,4 +140,5 @@ class BasicTrackerManager(TrackerManager):
 
     def _send_message(self, message):
         """Helpor method that performs method sending"""
-        self.message_sender.send_message(message=message)
+        # self.message_sender.send_message(message=message)
+        pass

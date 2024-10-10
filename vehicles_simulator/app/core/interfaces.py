@@ -24,6 +24,36 @@ class NavigationManager(ABC):
     def destination_reached(self):
         pass
 
+    @property
+    @abstractmethod
+    def current_location(self):
+        pass
+
+    @property
+    @abstractmethod
+    def destination(self):
+        pass
+
+    @property
+    @abstractmethod
+    def distance_to_destination(self):
+        pass
+
+    @property
+    @abstractmethod
+    def current_speed(self):
+        pass
+
+    @property
+    @abstractmethod
+    def heading_direction(self):
+        pass
+
+    @property
+    @abstractmethod
+    def out_of_zone_status(self):
+        pass
+
 
 class TasksManager(ABC):
     @property
