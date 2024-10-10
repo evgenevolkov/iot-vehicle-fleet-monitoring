@@ -112,7 +112,7 @@ class BasicTrackerManager(TrackerManager):
 
     def _get_out_of_zone_status(self) -> bool:
         """Helper method to get out of zone status"""
-        return self.navigation_manager.out_of_zone
+        return self.navigation_manager.out_of_zone_status
 
     def _get_current_time(self) -> datetime:
         """Helper method to get current time"""
