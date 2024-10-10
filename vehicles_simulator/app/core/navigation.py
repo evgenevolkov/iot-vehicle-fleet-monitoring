@@ -4,6 +4,7 @@ dependency BasicNavigationManager
 """
 import math
 from typing import List
+from decouple import config
 from app.core.heading import HeadingDirectionManager
 from app.core.interfaces import (
     AllowedZoneManager,
@@ -15,6 +16,9 @@ from app.core.interfaces import (
 from app.utils import schemas
 from app.utils.logger import get_logger
 
+
+DESTINATION_REACHED_THRESHOLD = config('DESTINATION_REACHED_THRESHOLD',
+                                       cast=int)
 
 logger = get_logger(__name__)
 
@@ -129,7 +133,8 @@ class BasicDestinationTracker(DestinationTracker):
     def __init__(
             self,
             location_service: LocationService,
-            destination_reached_threshold: int = 3,
+            destination_reached_threshold: int =
+                DESTINATION_REACHED_THRESHOLD,
             ):
 
         self.destination: schemas.Location = schemas.Location(x=0, y=0)
