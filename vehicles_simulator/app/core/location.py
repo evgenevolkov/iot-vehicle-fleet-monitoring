@@ -17,8 +17,12 @@ class NavigationMap:
         if cls._instance is None:
             cls._instance = super(NavigationMap, cls).__new__(cls)
             return cls._instance
-
-        raise ValueError("Can't instantiate a new Map")
+        msg = ("NavigationMap is already instantiated, can't instantinate "
+               f"a new one. Returning existing with size "
+               f"(x={cls._instance._x_size}, y={cls._instance._y_size}). "
+               f"Tried to create a map with size ({kwargs.get('map_size')})")
+        logger.error(msg)
+        return cls._instance
 
     def __init__(
             self,
