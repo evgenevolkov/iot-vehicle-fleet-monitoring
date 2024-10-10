@@ -104,7 +104,7 @@ class BasicTrackerManager(TrackerManager):
 
     def _get_heading_direction(self) -> schemas.Direction:
         """Helper method to get current heading direction"""
-        return self.navigation_manager.current_direction
+        return self.navigation_manager.heading_direction
 
     def _get_distance_to_destination(self) -> float:
         """Helper method to get distance to destination"""
