@@ -22,18 +22,9 @@ from app.utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-@pytest.fixture(name="vehicle", scope="module")
+@pytest.fixture(name="vehicle", scope="function")
 def vehicle_fixture():
     """Create an instance of a vehicle"""
-
-    # tracker
-    statuses_probabilities = {
-        schemas.TrackerStatus.ONLINE: 1.0,
-        schemas.TrackerStatus.OFFLINE: 0.0,
-    }
-    tracker_manager = BasicTrackerManager(
-        statuses_probs=statuses_probabilities
-    )
 
     # tasks
     tasks_manager = BasicTasksManager(
@@ -41,7 +32,6 @@ def vehicle_fixture():
     )
 
     # navigation
-
     map_size = schemas.MapSize(x_size=100, y_size=100)
     nav_map = NavigationMap(map_size=map_size)
     initial_location = schemas.Location(x=1, y=1)
@@ -65,6 +55,17 @@ def vehicle_fixture():
         heading_selector=heading_selector,
         location_service=location_service,
         movement_manager=movement_manager,
+    )
+
+    # tracker
+    statuses_probabilities = {
+        schemas.TrackerStatus.ONLINE: 1.0,
+        schemas.TrackerStatus.OFFLINE: 0.0,
+    }
+    tracker_manager = BasicTrackerManager(
+        statuses_probs=statuses_probabilities,
+        tasks_manager=tasks_manager,
+        navigation_manager=navigation_manager,
     )
 
     test_vehicle = Vehicle(

@@ -13,6 +13,6 @@ check_types:
 	mypy . || true
 
 test:
-	PYTHONPATH=$(shell pwd)/vehicles_simulator pytest vehicles_simulator/tests/functional/ || true
+	PYTHONPATH=$(shell pwd)/vehicles_simulator:$(shell pwd) pytest vehicles_simulator/tests/ || true
 
 check_all: test check_types lint
