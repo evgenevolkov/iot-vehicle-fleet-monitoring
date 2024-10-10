@@ -2,15 +2,20 @@
 import random
 from random import randrange
 from typing import Union
-import logging
 from decouple import config
-from app.utils import schemas
-from app.core.interfaces import TasksManager
 
-logger = logging.getLogger()
+from app.core.interfaces import TasksManager
+from app.utils import schemas
+from app.utils.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 NAVIGATION_MAP_X_SIZE = config('NAVIGATION_MAP_X_SIZE')
 NAVIGATION_MAP_Y_SIZE = config('NAVIGATION_MAP_Y_SIZE')
+RANDOM_SEED = config('RANDOM_SEED', cast=int)
+
+random.seed(RANDOM_SEED)
 
 
 class BasicTasksManager(TasksManager):
