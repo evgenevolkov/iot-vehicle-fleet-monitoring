@@ -11,10 +11,10 @@ from pydantic import (
 
 
 class Direction(Enum):
-    LEFT = 'left'
-    RIGHT = 'right'
-    UP = 'up'
-    DOWN = 'down'
+    LEFT = 'Left'
+    RIGHT = 'Right'
+    UP = 'Up'
+    DOWN = 'Down'
 
 
 class Movement(Enum):
