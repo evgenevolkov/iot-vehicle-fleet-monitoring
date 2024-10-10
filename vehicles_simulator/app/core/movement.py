@@ -43,7 +43,7 @@ class BasicMovementManager(MovementManager):
     """
     def __init__(
             self,
-            current_direction: schemas.Direction = schemas.Direction.UP,
+            heading_direction: schemas.Direction = schemas.Direction.UP,
             max_speed: int = MAX_SPEED,
             current_speed: int = 0,
             distance_until_turn_allowed: int = 0,
@@ -52,7 +52,7 @@ class BasicMovementManager(MovementManager):
 
         self.max_speed: int = max_speed
         self.current_speed: int = current_speed
-        self.current_direction: schemas.Direction = current_direction
+        self.heading_direction: schemas.Direction = heading_direction
         self.can_turn: bool = can_turn
         self.distance_until_turn_allowed: int = distance_until_turn_allowed
         self.shift: schemas.Shift
@@ -71,7 +71,7 @@ class BasicMovementManager(MovementManager):
     def turn(self, direction: schemas.Direction) -> None:
         """Try to make a turn or report why can't otherwise"""
         if self.can_turn:
-            self.current_direction = direction
+            self.heading_direction = direction
             self.distance_until_turn_allowed = \
                 self._define_distance_until_turn()
             logger.debug("Turned: %s", direction.value)
@@ -122,7 +122,7 @@ class BasicMovementManager(MovementManager):
 
     def _get_move_shift(self) -> schemas.Shift:
         """Calculate the move shift based on current speed."""
-        single_shift = schemas.Movement[self.current_direction.name].value
+        single_shift = schemas.Movement[self.heading_direction.name].value
         move_shift = schemas.Shift(
             x=single_shift[0] * self.current_speed,
             y=single_shift[1] * self.current_speed)

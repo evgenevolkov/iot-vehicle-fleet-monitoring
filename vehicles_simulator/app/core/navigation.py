@@ -37,8 +37,8 @@ class BasicNavigationManager(NavigationManager):
         self.movement_manager = movement_manager
 
     @property
-    def current_direction(self):
-        return self.movement_manager.current_direction.value
+    def heading_direction(self):
+        return self.movement_manager.heading_direction.value
 
     @property
     def current_location(self):
