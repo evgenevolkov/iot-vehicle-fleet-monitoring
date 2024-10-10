@@ -10,7 +10,6 @@ from app.core.task import BasicTasksManager
 from app.core.tracker import BasicTrackerManager
 from app.core.vehicle import Vehicle
 from app.utils import schemas
-from app.core.send import SQSMessageSender
 from decouple import config
 
 TRACKING_SQS_URL = config('TRACKING_SQS_URL')
@@ -85,12 +84,10 @@ class BasicVehicleFactory:
             schemas.TrackerStatus.OFFLINE: .2,
         }
         sqs_url = TRACKING_SQS_URL
-        message_sender = SQSMessageSender(endpoint_url=sqs_url)
         tracker_manager = BasicTrackerManager(
             statuses_probs=statuses_probabilities,
             tasks_manager=tasks_manager,
             navigation_manager=navigation_manager,
-            message_sender=message_sender
         )
 
         created_vehicle = Vehicle(
