@@ -3,6 +3,7 @@
 # pylint: disable=missing-class-docstring
 # pylint: disable=missing-function-docstring
 import pytest
+from app.core.interfaces import MessageSender
 from app.core.vehicle import Vehicle
 from app.core.task import BasicTasksManager
 from app.core.tracker import BasicTrackerManager
@@ -18,6 +19,8 @@ from app.utils import (
     schemas,
     )
 from app.utils.logger import get_logger
+from app.core.send import SQSMessageSender
+
 
 logger = get_logger(__name__)
 
@@ -62,10 +65,13 @@ def vehicle_fixture():
         schemas.TrackerStatus.ONLINE: 1.0,
         schemas.TrackerStatus.OFFLINE: 0.0,
     }
+    sqs_url = 'http://localhost:4566'
+    message_sender = SQSMessageSender(endpoint_url=sqs_url)
     tracker_manager = BasicTrackerManager(
         statuses_probs=statuses_probabilities,
         tasks_manager=tasks_manager,
         navigation_manager=navigation_manager,
+        message_sender=message_sender,
     )
 
     test_vehicle = Vehicle(
@@ -136,3 +142,12 @@ def test_vehicle_can_move(vehicle):
 
     assert location_before_move != location_after_move, (
         "Expected to be in different location after 2 moves")
+
+
+def test_vehicle_make_loop_moves(vehicle):
+    # vehicle.get_current_location()
+    for _ in range(20):
+        vehicle.run_execution_step()
+    assert vehicle.get_current_location() is not None, (
+        "expected vehicle current location to be not None"
+    )

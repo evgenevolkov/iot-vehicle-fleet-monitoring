@@ -82,3 +82,4 @@ class Vehicle:
             self.navigation_manager.distance_to_destination)
 
         self.tracker_manager.update()
+        self.tracker_manager.send_tracking_data()
