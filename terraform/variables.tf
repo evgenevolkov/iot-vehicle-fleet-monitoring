@@ -34,3 +34,9 @@ variable "sqs_queue_name" {
   default     = "vehicle-tracking"
 }
 
+variable "dynamodb_table_name" {
+  description = "Name of the DynamoDB table for vehicle tracking"
+  type        = string
+  default     = "vehicle-tracking"
+}
+

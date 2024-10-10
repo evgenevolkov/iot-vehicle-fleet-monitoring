@@ -39,6 +39,16 @@ resource "aws_sqs_queue" "vehicle_tracking" {
   message_retention_seconds         = 3600
 }
 
+resource "aws_dynamodb_table" "vehicle_tracking" {
+  name         = var.dynamodb_table_name
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "vehicle_id"
+
+  attribute {
+    name = "vehicle_id"
+    type = "S"
+  }
+}
 
 resource "aws_iam_role" "lambda_executor_role" {
   name = var.lambda_role_name
