@@ -13,6 +13,7 @@ TURN_DISTANCE_OFFSET = config('TURN_DISTANCE_OFFSET', cast=int)
 TURN_SPEED_THRESHOLD = config('TURN_SPEED_THRESHOLD', cast=int)
 SPEED_CHANGE_STEP = config('SPEED_CHANGE_STEP', cast=int)
 RANDOM_SEED = config('RANDOM_SEED', cast=int)
+TURN_DISTANCE_THRESHOLD = config('TURN_DISTANCE_THRESHOLD', cast=int)
 
 random.seed(RANDOM_SEED)
 
@@ -77,7 +78,7 @@ class BasicMovementManager(MovementManager):
             logger.debug("Turned: %s", direction.value)
             logger.debug("Distance until turn allowed %s",
                          self.distance_until_turn_allowed)
-        elif self.distance_until_turn_allowed > 2:
+        elif self.distance_until_turn_allowed > TURN_DISTANCE_THRESHOLD:
             logger.warning("Can't make turn because turn is not allowed here")
             logger.debug("Distance until turn allowed %s",
                          self.distance_until_turn_allowed)
